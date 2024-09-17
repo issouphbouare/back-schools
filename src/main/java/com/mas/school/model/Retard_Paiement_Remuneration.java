@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Retard_Paiement_Remuneration {
-	private double MensualiteEleve;
-	private double RemunerationPersonnel;
+	private double mensualiteEleve;
+	private double remunerationPersonnel;
 	
 
 }

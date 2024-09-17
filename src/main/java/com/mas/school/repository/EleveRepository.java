@@ -14,7 +14,7 @@ import com.mas.school.model.Eleve;
 
 public interface EleveRepository extends JpaRepository<Eleve, Long> {
 	@Query("SELECT a FROM Eleve a WHERE " +
-			   "a.matricule LIKE %:keyword% OR " +
+			   "( a.matricule LIKE %:keyword% OR " +
 			   "a.nom LIKE %:keyword% OR " +
 			   "a.prenom LIKE %:keyword% OR " +
 			   "a.genre LIKE %:keyword% OR " +
@@ -22,7 +22,7 @@ public interface EleveRepository extends JpaRepository<Eleve, Long> {
 			   "a.lieuNaissance LIKE %:keyword% OR " +
 			   "a.nomTuteur LIKE %:keyword% OR " +
 			   "a.telTuteur LIKE %:keyword% OR " +
-			   "a.classe.nom LIKE %:keyword% AND " +
+			   "a.classe.nom LIKE %:keyword% ) AND " +
 			   "a.classe.anneeScolaire.libelle LIKE %:annee%  ")
 	 Page<Eleve> searchByKeywordInAllColumns(@Param("keyword") String keyword,@Param("annee") String annee, Pageable pageable);
 

@@ -13,12 +13,12 @@ import com.mas.school.model.Enseignant;
 
 public interface EnseignantRepository extends JpaRepository<Enseignant, Long> {
 	@Query("SELECT a FROM Enseignant a WHERE " +
-			   "a.telephone LIKE %:keyword% OR " +
+			   "( a.telephone LIKE %:keyword% OR " +
 			   "a.nom LIKE %:keyword% OR " +
 			   "a.prenom LIKE %:keyword% OR " +
 			   "a.genre LIKE %:keyword% OR " +
-			   "a.typeEnseignant LIKE %:keyword% AND " +
-			   "a.anneeScolaire.libelle LIKE %:annee%  ")
+			   "a.typeEnseignant LIKE %:keyword% ) AND " +
+			   "a.anneeScolaire.libelle LIKE %:annee%")
 	 Page<Enseignant> searchByKeywordInAllColumns(@Param("keyword") String keyword,@Param("annee") String annee, Pageable pageable);
  
 	public List<Enseignant> findByAnneeScolaire(AnneeScolaire anneeScolaire);

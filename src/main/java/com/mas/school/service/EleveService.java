@@ -3,6 +3,8 @@ package com.mas.school.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,15 +14,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.mas.school.model.Eleve;
+import com.mas.school.repository.ClasseRepository;
 import com.mas.school.repository.EleveRepository;
 
-import jakarta.transaction.Transactional;
+
 
 @Service
 public class EleveService {
 
     @Autowired
     private EleveRepository eleveRepository;
+    @Autowired
+    private ClasseRepository classeRepository;
     @Autowired
     private GeneratorService generatorService;
 
@@ -35,7 +40,7 @@ public class EleveService {
     public Eleve createEleve(Eleve eleve) {
     	eleve.setCle(generateCle(eleve));
     	eleve.setMatricule(generateMatricule(eleve));
-    	eleve.setSolde(-eleve.getSolde()-eleve.getInscription());
+    	eleve.setSolde(eleve.getSolde()-eleve.getInscription()-eleve.getRelicat()-eleve.getScolarite());
         return eleveRepository.save(eleve);
     }
 
@@ -45,9 +50,10 @@ public class EleveService {
 	}
 
 	private String generateCle(Eleve eleve) {
-		String code1=eleve.getClasse().getNiveau();
-		String code3 = eleve.getClasse().getNom().substring(eleve.getClasse().getNom().length() - 4);
+		
+		String code1 = eleve.getClasse().getNom().substring(eleve.getClasse().getNom().length() - 4);
 		String code2 = eleve.getGenre().equals("Fille") ? "F" : "G";
+		String code3=eleve.getClasse().getNiveau();
 		String code4=eleve.getNom().substring(0, 2).toUpperCase();
 		
 		String result = code1+code2+code3+code4;
@@ -66,9 +72,14 @@ public class EleveService {
         eleve.setNomTuteur(eleveDetails.getNomTuteur());
         eleve.setTelTuteur(eleveDetails.getTelTuteur());
         
+        eleve.setSolde(eleve.getSolde()-eleveDetails.getInscription()-eleveDetails.getRelicat()-eleveDetails.getScolarite()
+        		+eleve.getInscription()+eleve.getRelicat()+eleve.getScolarite());
+        
         eleve.setInscription(eleveDetails.getInscription());
+        eleve.setScolarite(eleveDetails.getScolarite());
+        eleve.setRelicat(eleveDetails.getRelicat());
         eleve.setMensualite(eleveDetails.getMensualite());
-        eleve.setSolde(eleve.getSolde()+eleve.getInscription()-eleveDetails.getInscription());
+       
         eleve.setClasse(eleveDetails.getClasse());
         return eleveRepository.save(eleve);
     }

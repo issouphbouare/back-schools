@@ -10,12 +10,12 @@ import com.mas.school.model.Remuneration;
 
 public interface RemunerationRepository extends JpaRepository<Remuneration, Long> {
 	@Query("SELECT a FROM Remuneration a WHERE " +
-			   "a.mois LIKE %:keyword% OR " +
-			   "a.enseignant.telephone LIKE %:keyword% AND " +
-			   "a.enseignant.anneeScolaire.libelle LIKE %:annee% OR " +
+			   "( a.mois LIKE %:keyword% OR " +
+			   "a.enseignant.telephone LIKE %:keyword% OR " +
 			   "a.enseignant.prenom LIKE %:keyword% OR " +
 			   "a.enseignant.nom LIKE %:keyword% OR " +
-			   "TO_CHAR(a.dateRemuneration, 'DD-MM-YYYY') LIKE %:keyword% ")
+			   "TO_CHAR(a.dateRemuneration, 'DD-MM-YYYY') LIKE %:keyword% ) AND "+
+			   "a.enseignant.anneeScolaire.libelle LIKE %:annee% ")
 	 Page<Remuneration> searchByKeywordInAllColumns(@Param("keyword") String keyword, @Param("annee") String annee, Pageable pageable);
 
 }

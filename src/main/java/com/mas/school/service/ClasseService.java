@@ -44,7 +44,7 @@ public class ClasseService {
 	public Classe updateClasse(Long id, Classe classeDetails) {
         Classe classe = classeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Classe non trouvée pour id : " + id));
-        classe.setNom(classeDetails.getNom());
+        classe.setNom(generateNomClasse(classeDetails.getNiveau(),classeDetails.getAnneeScolaire()));
         classe.setNiveau(classeDetails.getNiveau());
         classe.setCycle(classeDetails.getCycle());
         classe.setAnneeScolaire(classeDetails.getAnneeScolaire());

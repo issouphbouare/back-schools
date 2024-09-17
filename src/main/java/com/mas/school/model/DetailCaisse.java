@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetailCaisse {
-	private double Entree;
-	private double Sortie;
-	private double Solde;
+	private double entree;
+	private double sortie;
+	private double solde;
 
 }

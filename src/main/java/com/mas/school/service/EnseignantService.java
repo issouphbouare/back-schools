@@ -3,6 +3,8 @@ package com.mas.school.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,11 +13,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.mas.school.model.Eleve;
 import com.mas.school.model.Enseignant;
 import com.mas.school.repository.EnseignantRepository;
 
-import jakarta.transaction.Transactional;
+
 
 @Service
 public class EnseignantService {
@@ -40,6 +41,7 @@ public class EnseignantService {
         Enseignant enseignant = enseignantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enseignant non trouvée pour id : " + id));
         
+        enseignant.setCode(enseignantDetails.getAnneeScolaire().getRef() + enseignantDetails.getTelephone());
         enseignant.setNom(enseignantDetails.getNom());
         enseignant.setPrenom(enseignantDetails.getPrenom());
         enseignant.setGenre(enseignantDetails.getGenre());

@@ -1,4 +1,4 @@
-package com.mas.school;
+package com.mas.school.jwtSwagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

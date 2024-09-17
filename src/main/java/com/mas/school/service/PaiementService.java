@@ -33,7 +33,7 @@ public class PaiementService {
 
     public Paiement createPaiement(Paiement paiement) {
     	
-    	paiement.getEleve().setSolde(paiement.getEleve().getSolde()-paiement.getMontant());
+    	paiement.getEleve().setSolde(paiement.getEleve().getSolde()+paiement.getMontant());
     	eleveRepository.save(paiement.getEleve());
         return paiementRepository.save(paiement);
     }
@@ -41,11 +41,13 @@ public class PaiementService {
     public Paiement updatePaiement(Long id, Paiement paiementDetails) {
         Paiement paiement = paiementRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paiement non trouvée pour id : " + id));
+        
+        paiement.getEleve().setSolde(paiement.getEleve().getSolde()-paiement.getMontant()+paiementDetails.getMontant());
+        
         paiement.setMontant(paiementDetails.getMontant());
         paiement.setMois(paiementDetails.getMois());
-        paiement.setEleve(paiementDetails.getEleve());
+        paiement.setType(paiementDetails.getType());
         
-        paiement.getEleve().setSolde(paiement.getEleve().getSolde()+paiement.getMontant()-paiementDetails.getMontant());
     	eleveRepository.save(paiement.getEleve());
     	
         return paiementRepository.save(paiement);

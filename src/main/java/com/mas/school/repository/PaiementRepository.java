@@ -10,14 +10,14 @@ import com.mas.school.model.Paiement;
 
 public interface PaiementRepository extends JpaRepository<Paiement, Long> {
 	@Query("SELECT a FROM Paiement a WHERE " +
-			   "a.typePaiement LIKE %:keyword% OR " +
+			   "( a.type LIKE %:keyword% OR " +
 			   "a.mois LIKE %:keyword% OR " +
-			   "a.eleve.matricule LIKE %:keyword% AND " +
-			   "a.eleve.classe.anneeScolaire.libelle LIKE %:annee% OR " +
+			   "a.eleve.matricule LIKE %:keyword% OR " +
 			   "a.eleve.prenom LIKE %:keyword% OR " +
 			   "a.eleve.nom LIKE %:keyword% OR " +
 			   "a.eleve.telTuteur LIKE %:keyword% OR " +
-			   "TO_CHAR(a.datePaiement, 'DD-MM-YYYY') LIKE %:keyword% ")
+			   "TO_CHAR(a.datePaiement, 'DD-MM-YYYY') LIKE %:keyword%) AND "+
+			   "a.eleve.classe.anneeScolaire.libelle LIKE %:annee% ")
 	 Page<Paiement> searchByKeywordInAllColumns(@Param("keyword") String keyword, @Param("annee") String annee, Pageable pageable);
 
 }

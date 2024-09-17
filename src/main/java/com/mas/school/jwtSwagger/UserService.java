@@ -1,4 +1,4 @@
-package com.mas.school.service;
+package com.mas.school.jwtSwagger;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import com.mas.school.model.User;
-import com.mas.school.repository.UserRepository;
 
 import lombok.Data;
 
@@ -38,8 +35,15 @@ public class UserService {
         return savedUser;
     }
     
-    public Page<User> searchUsers(String searchTerm, int page, int size) {
-    	Sort sort = Sort.by(Sort.Direction.ASC, "username");
+    public Page<User> searchUsers(String searchTerm, int page, int size, String sortBy, String sortDirection) {
+       
+        // Déterminer la direction de tri à partir du paramètre sortDirection
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        
+        // Créer un objet Sort dynamique en utilisant les paramètres sortBy et direction
+        Sort sort = Sort.by(direction, sortBy);
+
+        // Créer un objet Pageable avec les informations de pagination et de tri
         Pageable pageable = PageRequest.of(page, size, sort);
         return userRepository.searchByKeywordInAllColumns(searchTerm, pageable);
     }

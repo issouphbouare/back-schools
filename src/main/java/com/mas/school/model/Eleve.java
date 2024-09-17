@@ -1,20 +1,11 @@
 package com.mas.school.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,7 +30,10 @@ public class Eleve {
 	private String telTuteur;
 	private double solde;
 	private String cle;
+	private String modePaiement;
 	private double inscription;
+	private double relicat;
+	private double scolarite;
 	private double mensualite;
 	
 	@Temporal(TemporalType.DATE)
@@ -54,7 +48,7 @@ public class Eleve {
 	private List<Paiement> paiements;
 
 	public void appliquerMisAjour() {
-		 this.solde -= this.mensualite;
+		 if(modePaiement.equals("Mensuel")) this.solde -= this.mensualite;
 		
 	}
 }
