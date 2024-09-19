@@ -3,6 +3,9 @@ package com.mas.school.model;
 import java.util.Date;
 
 import javax.persistence.*;
+
+import com.mas.school.jwtSwagger.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +27,8 @@ public class Remuneration {
 	
 	@ManyToOne
 	private Enseignant enseignant;
+	
+	@ManyToOne
+	private User user;
 
 }

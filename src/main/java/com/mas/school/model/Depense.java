@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.mas.school.jwtSwagger.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,5 +37,8 @@ public class Depense {
 	@Temporal(TemporalType.DATE)
     @Column(name = "date", columnDefinition = "DATE DEFAULT CURRENT_DATE", insertable = false, updatable = false)
 	private Date  dateDepense;
+	
+	@ManyToOne
+	private User user;
 
 }

@@ -3,6 +3,7 @@ package com.mas.school.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mas.school.jwtSwagger.User;
 
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,4 +34,6 @@ public class Classe {
 	@JsonIgnore
 	@OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
 	private List<Seance> seances;
+	
+	
 }

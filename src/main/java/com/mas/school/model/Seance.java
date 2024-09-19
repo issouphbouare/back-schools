@@ -1,9 +1,19 @@
 package com.mas.school.model;
 
-import java.util.Date;
 import java.time.LocalTime;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.mas.school.jwtSwagger.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +28,11 @@ public class Seance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	private String matiere;
+	private String horaire;
 	private LocalTime heureDebut;
-    private LocalTime heureFin;
-	private double nombreHeure;
+	private String mois;
+    
+	private int nombreHeure;
 	
 	@Temporal(TemporalType.DATE)
     @Column(name = "date", columnDefinition = "DATE DEFAULT CURRENT_DATE", insertable = false, updatable = false)
@@ -31,5 +43,8 @@ public class Seance {
 	
 	@ManyToOne
 	private Classe classe;
+	
+	@ManyToOne
+	private User user;
 
 }

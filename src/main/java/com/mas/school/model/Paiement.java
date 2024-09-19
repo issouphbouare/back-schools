@@ -3,6 +3,9 @@ package com.mas.school.model;
 import java.util.Date;
 
 import javax.persistence.*;
+
+import com.mas.school.jwtSwagger.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +31,6 @@ public class Paiement {
 	@ManyToOne
 	private Eleve eleve;
 
-
+	@ManyToOne
+	private User user;
 }

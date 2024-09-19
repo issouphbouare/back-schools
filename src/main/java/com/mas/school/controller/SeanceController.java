@@ -63,12 +63,13 @@ public class SeanceController {
     public ResponseEntity<Page<Seance>> search(
             @RequestParam String keyword,
             @RequestParam String annee,
+            @RequestParam String personnel,
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam(required = false, defaultValue = "id") String sortBy,  // Paramètre pour spécifier la colonne de tri
             @RequestParam(required = false, defaultValue = "DESC") String sortDirection  // Paramètre pour spécifier la direction de tri
     ) {
-        Page<Seance> seances = seanceService.search(keyword,annee, page, size, sortBy, sortDirection);
+        Page<Seance> seances = seanceService.search(keyword,annee,personnel, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(seances);
     }
 }

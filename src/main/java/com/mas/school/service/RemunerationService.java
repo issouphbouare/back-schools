@@ -39,9 +39,10 @@ public class RemunerationService {
     public Remuneration updateRemuneration(Long id, Remuneration remunerationDetails) {
         Remuneration remuneration = remunerationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Remuneration non trouvée pour id : " + id));
+        remuneration.getEnseignant().setImpayes(remuneration.getEnseignant().getImpayes()+remuneration.getMontant()-remunerationDetails.getMontant());
         remuneration.setMontant(remunerationDetails.getMontant());
         remuneration.setMois(remunerationDetails.getMois());
-        remuneration.setEnseignant(remunerationDetails.getEnseignant());
+        //remuneration.setEnseignant(remunerationDetails.getEnseignant());
         
         remuneration.getEnseignant().setImpayes(remuneration.getEnseignant().getImpayes()+remuneration.getMontant()-remunerationDetails.getMontant());
     	enseignantRepository.save(remuneration.getEnseignant());

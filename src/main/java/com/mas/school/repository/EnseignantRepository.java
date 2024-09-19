@@ -15,6 +15,7 @@ public interface EnseignantRepository extends JpaRepository<Enseignant, Long> {
 	@Query("SELECT a FROM Enseignant a WHERE " +
 			   "( a.telephone LIKE %:keyword% OR " +
 			   "a.nom LIKE %:keyword% OR " +
+			   "a.code LIKE %:keyword% OR " +
 			   "a.prenom LIKE %:keyword% OR " +
 			   "a.genre LIKE %:keyword% OR " +
 			   "a.typeEnseignant LIKE %:keyword% ) AND " +

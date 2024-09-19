@@ -71,6 +71,7 @@ public class EleveService {
         eleve.setLieuNaissance(eleveDetails.getLieuNaissance());
         eleve.setNomTuteur(eleveDetails.getNomTuteur());
         eleve.setTelTuteur(eleveDetails.getTelTuteur());
+        eleve.setModePaiement(eleveDetails.getModePaiement());
         
         eleve.setSolde(eleve.getSolde()-eleveDetails.getInscription()-eleveDetails.getRelicat()-eleveDetails.getScolarite()
         		+eleve.getInscription()+eleve.getRelicat()+eleve.getScolarite());
