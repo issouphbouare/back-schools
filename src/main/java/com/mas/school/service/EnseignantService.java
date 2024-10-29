@@ -34,6 +34,9 @@ public class EnseignantService {
 
     public Enseignant createEnseignant(Enseignant enseignant) {
     	enseignant.setCode(enseignant.getAnneeScolaire().getRef() + enseignant.getTelephone());
+    	enseignant.setNom(enseignant.getNom().toUpperCase());
+    	enseignant.setPrenom(enseignant.getPrenom().substring(0, 1).toUpperCase() + enseignant.getPrenom().substring(1).toLowerCase());
+        
         return enseignantRepository.save(enseignant);
     }
 
@@ -50,6 +53,9 @@ public class EnseignantService {
         enseignant.setAnneeScolaire(enseignantDetails.getAnneeScolaire());
         enseignant.setTauxHoraire(enseignantDetails.getTauxHoraire());
         enseignant.setAnneeScolaire(enseignantDetails.getAnneeScolaire());
+        enseignant.setNom(enseignant.getNom().toUpperCase());
+    	enseignant.setPrenom(enseignant.getPrenom().substring(0, 1).toUpperCase() + enseignant.getPrenom().substring(1).toLowerCase());
+       
         return enseignantRepository.save(enseignant);
     }
 

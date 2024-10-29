@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mas.school.model.Eleve;
 import com.mas.school.service.EleveService;
+
+import io.jsonwebtoken.io.IOException;
 
 @RestController
 @CrossOrigin("*")
@@ -70,5 +74,15 @@ public class EleveController {
     ) {
         Page<Eleve> eleves = eleveService.search(keyword, annee, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(eleves);
+    }
+    
+    @PostMapping("/importer")
+    public ResponseEntity<List<Eleve>> uploadExcelFileNafama(@RequestParam("file") MultipartFile file) throws java.io.IOException {
+        try {
+            List<Eleve> operations = eleveService.processExcelFile(file);
+            return ResponseEntity.ok(operations);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

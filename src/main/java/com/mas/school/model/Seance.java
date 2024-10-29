@@ -27,7 +27,6 @@ public class Seance {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	private String matiere;
 	private String horaire;
 	private LocalTime heureDebut;
 	private String mois;
@@ -40,6 +39,10 @@ public class Seance {
 	
 	@ManyToOne
 	private Enseignant enseignant;
+	
+	@ManyToOne
+	private Matiere matiere;
+
 	
 	@ManyToOne
 	private Classe classe;

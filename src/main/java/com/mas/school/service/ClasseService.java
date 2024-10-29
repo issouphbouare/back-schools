@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.mas.school.model.AnneeScolaire;
 import com.mas.school.model.Classe;
 import com.mas.school.repository.ClasseRepository;
 
@@ -32,22 +31,19 @@ public class ClasseService {
     }
 
     public Classe createClasse(Classe classe) {
-    	classe.setNom(generateNomClasse(classe.getNiveau(),classe.getAnneeScolaire()));
+    	classe.setNom(generateNomClasse(classe));
         return classeRepository.save(classe);
     }
 
-    private String generateNomClasse(String niveau, AnneeScolaire annee) {
-		// TODO Auto-generated method stub
-		return generatorService.generateNomClasse(niveau, annee);
-	}
+    
 
 	public Classe updateClasse(Long id, Classe classeDetails) {
         Classe classe = classeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Classe non trouvée pour id : " + id));
-        classe.setNom(generateNomClasse(classeDetails.getNiveau(),classeDetails.getAnneeScolaire()));
+        
         classe.setNiveau(classeDetails.getNiveau());
-        classe.setCycle(classeDetails.getCycle());
         classe.setAnneeScolaire(classeDetails.getAnneeScolaire());
+        classe.setNom(generateNomClasse(classe));
         return classeRepository.save(classe);
     }
 
@@ -67,5 +63,10 @@ public class ClasseService {
         Pageable pageable = PageRequest.of(page, size, sort);
         return classeRepository.searchByKeywordInAllColumns(searchTerm, annee, pageable);
     }
+    
+    private String generateNomClasse(Classe classe) {
+		// TODO Auto-generated method stub
+		return generatorService.generateNomClasse(classe);
+	}
 }
 

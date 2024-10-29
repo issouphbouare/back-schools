@@ -1,10 +1,20 @@
 package com.mas.school.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.mas.school.model.Classe;
 import com.mas.school.model.Eleve;
 import com.mas.school.repository.ClasseRepository;
 import com.mas.school.repository.EleveRepository;
@@ -40,6 +52,9 @@ public class EleveService {
     public Eleve createEleve(Eleve eleve) {
     	eleve.setCle(generateCle(eleve));
     	eleve.setMatricule(generateMatricule(eleve));
+    	eleve.setNomTuteur(eleve.getNomTuteur().toUpperCase());
+    	eleve.setNom(eleve.getNom().toUpperCase());
+    	eleve.setPrenom(eleve.getPrenom().substring(0, 1).toUpperCase() + eleve.getPrenom().substring(1).toLowerCase());
     	eleve.setSolde(eleve.getSolde()-eleve.getInscription()-eleve.getRelicat()-eleve.getScolarite());
         return eleveRepository.save(eleve);
     }
@@ -53,10 +68,11 @@ public class EleveService {
 		
 		String code1 = eleve.getClasse().getNom().substring(eleve.getClasse().getNom().length() - 4);
 		String code2 = eleve.getGenre().equals("Fille") ? "F" : "G";
-		String code3=eleve.getClasse().getNiveau();
-		String code4=eleve.getNom().substring(0, 2).toUpperCase();
+		String code3=eleve.getClasse().getNiveau().getLibelle();
+		String code4=eleve.getNom().substring(0, 1).toUpperCase();
+		String code5=eleve.getPrenom().substring(0, 1).toUpperCase();
 		
-		String result = code1+code2+code3+code4;
+		String result = code1+code2+code3+code4+code5;
 		return result;
 	}
 
@@ -66,6 +82,15 @@ public class EleveService {
         
         eleve.setNom(eleveDetails.getNom());
         eleve.setPrenom(eleveDetails.getPrenom());
+        eleve.setNomTuteur(eleveDetails.getNomTuteur());
+        
+        eleve.setCle(generateCle(eleve));
+    	eleve.setMatricule(generateMatricule(eleve));
+        
+        eleve.setNom(eleve.getNom().toUpperCase());
+        eleve.setNomTuteur(eleve.getNomTuteur().toUpperCase());
+   	    eleve.setPrenom(eleve.getPrenom().substring(0, 1).toUpperCase() + eleve.getPrenom().substring(1).toLowerCase());
+   	    
         eleve.setGenre(eleveDetails.getGenre());
         eleve.setDateNaissance(eleveDetails.getDateNaissance());
         eleve.setLieuNaissance(eleveDetails.getLieuNaissance());
@@ -112,6 +137,81 @@ public class EleveService {
         for (Eleve eleve : eleves) {
             eleve.appliquerMisAjour();
             eleveRepository.save(eleve);
+        }
+    }
+    
+    
+    
+    public List<Eleve> processExcelFile(MultipartFile file) throws IOException {
+        List<Eleve> eleves = new ArrayList<>();
+
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(7);
+            for (Row row : sheet) {
+                if (row.getRowNum() < 3) {
+                    continue; // Ignorer les 4 premieres lignes
+                }
+                             // Créer une nouvelle instance d'Eleve
+                Eleve eleve = new Eleve();
+
+                // Vérifier si la référence existe
+                String nom = getCellValue(row.getCell(2));
+                eleve.setNom(nom.toUpperCase());
+                eleve.setPrenom(getCellValue(row.getCell(1)).substring(0, 1).toUpperCase() +(getCellValue(row.getCell(1)).substring(1).toLowerCase()));
+                eleve.setGenre((getCellValue(row.getCell(3)).equals("F"))? "Fille":"Garçon");
+                
+                
+                // Numéro principal et secondaire
+                 Classe classe = classeRepository.findById(10L).get();
+                if(classe==null) {
+               	 continue;
+                }
+                eleve.setClasse(classe);
+                eleve.setCle(generateCle(eleve));
+                eleve.setMatricule(generateMatricule(eleve));
+                eleve.setInscription(7500);
+                eleve.setMensualite(10000);
+                eleve.setRelicat(0);
+                eleve.setSolde(eleve.getSolde()-eleve.getInscription()-eleve.getRelicat()-eleve.getScolarite());
+                
+                
+                // Sauvegarder l'opération
+                eleveRepository.save(eleve);
+                eleves.add(eleve); // Ajouter l'opération à la liste
+                
+            }
+        }
+
+        return eleves;
+    }
+
+    // Méthode pour récupérer la valeur d'une cellule en fonction de son type
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        // Déterminer le type de cellule
+        CellType cellType = cell.getCellType();
+        switch (cellType) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                // Gérer les dates et les nombres différemment si nécessaire
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    // Si la cellule contient une date, vous pouvez la formater comme vous le souhaitez
+                    return cell.getDateCellValue().toString(); // Vous pouvez ajuster le format de date
+                } else {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula(); // Vous pouvez gérer les formules différemment si nécessaire
+            default:
+                return "";
         }
     }
 }

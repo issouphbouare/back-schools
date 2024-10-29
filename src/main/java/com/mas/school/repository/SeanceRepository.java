@@ -15,7 +15,7 @@ import com.mas.school.model.Seance;
 
 public interface SeanceRepository extends JpaRepository<Seance, Long> {
 	@Query("SELECT a FROM Seance a WHERE " +
-			   "( a.matiere LIKE %:keyword% OR " +
+			   "( a.matiere.libelle LIKE %:keyword% OR " +
 			   "a.horaire LIKE %:keyword% OR " +
 			   "a.mois LIKE %:keyword% OR " +
 			   "a.classe.nom LIKE %:keyword% OR " +

@@ -76,7 +76,7 @@ public class SeanceService {
         seance.setNombreHeure(seanceDetails.getNombreHeure());
         seance.setMatiere(seanceDetails.getMatiere());
         seance.setHoraire(seanceDetails.getHoraire());
-        //seance.setEnseignant(seanceDetails.getEnseignant());
+        seance.setMatiere(seanceDetails.getMatiere());
         seance.setClasse(seanceDetails.getClasse());
         
        

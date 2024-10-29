@@ -10,16 +10,22 @@ import org.springframework.data.repository.query.Param;
 
 import com.mas.school.model.AnneeScolaire;
 import com.mas.school.model.Classe;
+import com.mas.school.model.Niveau;
+import com.mas.school.model.Serie;
 
 public interface ClasseRepository extends JpaRepository<Classe, Long> {
 	
 	@Query("SELECT a FROM Classe a WHERE " +
 			   "( a.nom LIKE %:keyword% OR " +
-			   "a.niveau LIKE %:keyword% OR "+
-			   "a.cycle LIKE %:keyword% ) AND " +
+			   "a.niveau.serie.cycle.libelle LIKE %:keyword% OR "+
+			   "a.niveau.libelle LIKE %:keyword% OR "+
+			   "a.niveau.serie.ref LIKE %:keyword% ) AND " +
 			   "a.anneeScolaire.libelle LIKE %:annee% ")
 	 Page<Classe> searchByKeywordInAllColumns(@Param("keyword") String keyword, @Param("annee") String annee, Pageable pageable);
 
-	List<Classe> findByNiveauAndAnneeScolaire(String niveau, AnneeScolaire annee);
+
+
+
+	List<Classe> findByNiveauAndAnneeScolaire(Niveau niveau, AnneeScolaire anneeScolaire);
 
 }

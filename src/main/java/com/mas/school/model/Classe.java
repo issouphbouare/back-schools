@@ -18,11 +18,9 @@ public class Classe {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
-	@Column(unique = true, nullable = false)
 	private String nom;
-	private String cycle;
-	private String niveau;
+	@ManyToOne
+	private Niveau niveau;
 	
 	@ManyToOne
 	private AnneeScolaire anneeScolaire;

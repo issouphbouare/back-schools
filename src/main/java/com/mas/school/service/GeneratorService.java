@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mas.school.model.AnneeScolaire;
 import com.mas.school.model.Classe;
 import com.mas.school.model.Eleve;
 import com.mas.school.repository.ClasseRepository;
@@ -20,26 +19,25 @@ public class GeneratorService {
 	private EleveRepository eleveRepository;
 	
 	// Generation de nom de classe
-	public String generateNomClasse(String niveau, AnneeScolaire annee) {
-		List<Classe>  classes=classeRepository.findByNiveauAndAnneeScolaire(niveau, annee);
+	public String generateNomClasse(Classe classe) {
+		List<Classe>  classes=classeRepository.findByNiveauAndAnneeScolaire(classe.getNiveau(), classe.getAnneeScolaire());
     	long seq=0;
-    	for (Classe classe : classes) seq++;
+    	for (Classe c : classes) seq++;
+    	if(classe.getNiveau().getLibelle().equals("00")) classe.getNiveau().setLibelle("Jardin");
+    	if(classe.getNiveau().getLibelle().equals("01")) classe.getNiveau().setLibelle("1ere");
+    	if(classe.getNiveau().getLibelle().equals("02")) classe.getNiveau().setLibelle("2eme");
+    	if(classe.getNiveau().getLibelle().equals("03")) classe.getNiveau().setLibelle("3eme");
+    	if(classe.getNiveau().getLibelle().equals("04")) classe.getNiveau().setLibelle("4eme");
+    	if(classe.getNiveau().getLibelle().equals("05")) classe.getNiveau().setLibelle("5eme");
+    	if(classe.getNiveau().getLibelle().equals("06")) classe.getNiveau().setLibelle("6eme");
+    	if(classe.getNiveau().getLibelle().equals("07")) classe.getNiveau().setLibelle("7eme");
+    	if(classe.getNiveau().getLibelle().equals("08")) classe.getNiveau().setLibelle("8eme");
+    	if(classe.getNiveau().getLibelle().equals("09")) classe.getNiveau().setLibelle("9eme");
+    	if(classe.getNiveau().getLibelle().equals("10")) classe.getNiveau().setLibelle("10eme");
+    	if(classe.getNiveau().getLibelle().equals("11")) classe.getNiveau().setLibelle("11eme");
+    	if(classe.getNiveau().getLibelle().equals("12")) classe.getNiveau().setLibelle("12eme");
     	
-    	if(niveau.equals("00")) niveau="Jardin";
-    	if(niveau.equals("01")) niveau="1ere";
-    	if(niveau.equals("02")) niveau="2eme";
-    	if(niveau.equals("03")) niveau="3eme";
-    	if(niveau.equals("04")) niveau="4eme";
-    	if(niveau.equals("05")) niveau="5eme";
-    	if(niveau.equals("06")) niveau="6eme";
-    	if(niveau.equals("07")) niveau="7eme";
-    	if(niveau.equals("08")) niveau="8eme";
-    	if(niveau.equals("09")) niveau="9eme";
-    	if(niveau.equals("10")) niveau="10eme";
-    	if(niveau.equals("11")) niveau="11eme";
-    	if(niveau.equals("12")) niveau="12eme";
-    	
-		return niveau+"_"+generateAlphabet(seq)+"_"+annee.getRef();
+		return classe.getNiveau().getLibelle()+"_"+classe.getNiveau().getSerie().getRef()+"_"+generateAlphabet(seq)+"_"+classe.getAnneeScolaire().getRef();
 	} 
 	
 	private String generateAlphabet(long seq) {
